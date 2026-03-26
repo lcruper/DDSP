@@ -17,13 +17,15 @@ def run(method: str, folder_files: str, folder_results: str, N: int, alpha: floa
         print(f"RESOLVING: {file}")
         path_to_file = folder_files + "/" + file
         if method == "GRA":
+            value = alpha
             if alpha == -1:
-                alpha = "rnd"
-            path_to_save_csv = folder_results + "/" + method + "_" +  str(N) + "_" + str(alpha)  + "_" + file[:-3] + "csv"
+                value = "rnd"
+            path_to_save_csv = folder_results + "/" + method + "_" +  str(N) + "_" + str(value)  + "_" + file[:-3] + "csv"
         elif method == "RGA":
+            value = beta
             if beta == -1:
-                beta = "rnd"
-            path_to_save_csv = folder_results + "/" + method + "_" +  str(N) + "_" + str(beta) + "_" + file[:-3] + "csv"
+                value = "rnd"
+            path_to_save_csv = folder_results + "/" + method + "_" +  str(N) + "_" + str(value) + "_" + file[:-3] + "csv"
         elif method == "IRGA":
             path_to_save_csv = folder_results + "/" + method + "_" +  str(N) + "_" + file[:-3] + "csv"
         biobjective(method, path_to_file, path_to_save_csv, N, alpha, beta, multi)
