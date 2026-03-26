@@ -154,17 +154,16 @@ def node_to_insert_constructive(method_constructive: str, alpha: float, beta: fl
         random.shuffle(RCL)
         return max(RCL, key = lambda node : (greedy(adj_dict, node, nds), -adj_dict[node][2]))
 
-def constructive(method_constructive: str, alpha: float, beta: float, adj_dict: Dict[int, Tuple[Set[int], int, float]], initial: Tuple[Set[int], List[int], Set[int], Set[int]], random: bool=False)\
+def constructive(method_constructive: str, alpha: float, beta: float, adj_dict: Dict[int, Tuple[Set[int], int, float]], initial: Tuple[Set[int], List[int], Set[int], Set[int]])\
     -> Tuple[int, Set[int]] :
     s = initial[0].copy()
     CL = initial[1].copy()
     nds = initial[3].copy()
     while len(nds) > 0 :
-        if random:
-            if method_constructive == "GRA" :
-                alpha = random_01()
-            if method_constructive == "RGA" :
-                beta = random_01()
+        if method_constructive == "GRA" and alpha == -1 :
+            alpha = random_01()
+        elif method_constructive == "RGA" and beta == -1 :
+            beta = random_01()
         node = node_to_insert_constructive(method_constructive, alpha, beta, adj_dict, CL, nds)
         s.add(node)
         CL.remove(node)  
@@ -217,7 +216,7 @@ def local_search(cond: int, adj_dict: Dict[int, Tuple[Set[int], int, float]], sp
 
 # Algorithm
 
-def monoobjective(method: str, path_to_file: str, epsilon: float, N: int) \
+def monoobjective(method: str, path_to_file: str, epsilon: float, N: int, alpha: float, beta: float) \
     -> Tuple[int, float, float]:
     dist_matrix = prune(read_matrix(path_to_file), epsilon)
     adj_dict = to_adj_dict(dist_matrix)
@@ -231,7 +230,7 @@ def monoobjective(method: str, path_to_file: str, epsilon: float, N: int) \
 
     initial_solutions = []
     for _ in range(N):
-        _, initial_solution_s  = constructive(method, -1, -1, adj_dict, initial, True)
+        _, initial_solution_s  = constructive(method, alpha, beta, adj_dict, initial)
         initial_solutions.append(initial_solution_s)
     solutions = []
     for i in range(N):
@@ -246,7 +245,7 @@ def monoobjective(method: str, path_to_file: str, epsilon: float, N: int) \
 
     return OF1, OF2, t
 
-def biobjective(method: str, path_to_file: str, path_to_save_csv: str, N: int, multi: bool) -> None:
+def biobjective(method: str, path_to_file: str, path_to_save_csv: str, N: int, alpha: float, beta: float, multi: bool) -> None:
     D = read_matrix(path_to_file)
     results = {"OF1": [], "OF2": [], "Time (s)": []}
 
@@ -256,7 +255,7 @@ def biobjective(method: str, path_to_file: str, path_to_save_csv: str, N: int, m
 
     for epsilon in ls_epsilon:
         print(f"epsilon: {epsilon}")
-        OF1, OF2, t = monoobjective(method, path_to_file, epsilon, N)
+        OF1, OF2, t = monoobjective(method, path_to_file, epsilon, N, alpha, beta)
         results["OF1"].append(OF1)
         results["OF2"].append(OF2)
         results["Time (s)"].append(np.round(t,2))
