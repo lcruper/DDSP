@@ -1,9 +1,14 @@
 # Libraries -----------------------------------------------------------------------------------------------------¡
 from Exact import *
-import os
+import os, re
 
 def run(folder_files: str, folder_results: str, t: int, multi: bool = True) -> None:
-    files = sorted([file for file in os.listdir(folder_files) if file.startswith("graph_") & file.endswith(".txt")])
+
+    def extract_number(file):
+        matches = re.findall(r'(\d+)', file)
+        return tuple(map(int, matches)) if matches else (float('inf'),)
+
+    files = sorted([file for file in os.listdir(folder_files) if file.startswith("graph_") & file.endswith(".txt")], key=extract_number)
     for file in files :
         print(f"RESOLVING: {file}")
         path_to_file = folder_files + "/" + file

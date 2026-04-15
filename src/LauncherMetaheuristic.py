@@ -2,8 +2,6 @@
 from Metaheuristic import *
 import os, re
 
-from results import printResults
-
 # Random seed ----------------------------------------------------------------------------------------------------
 random.seed(7)
 
@@ -35,6 +33,16 @@ def run(method: str, folder_files: str, folder_results: str, N: int, alpha: floa
 # Main -----------------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
+
+    # Calibration
+    #for alpha in [-1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+    #    run("GRA", "../instances/subset", "../results/preliminary", 100, alpha, -1, False)
+
+    #for beta in [-1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+    #    run("RGA", "../instances/subset", "../results/preliminary", 100, -1, beta,  False)
+
+
+    # Launcher
     method = "IRGA" #GRA, RGA, IRGA
     alpha = -1
     beta = -1
